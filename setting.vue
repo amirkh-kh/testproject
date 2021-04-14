@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center">
     <v-col cols="12" xl="10" lg="10" md="4" sm="4" height="900">
-      <v-card class="mx-10 mt-5 px-5" dark>
+      <v-card class="mx-10 mt-5 px-5" dark style="border: 3px solid #e2c12c">
         <div>
           <br />
 
@@ -13,11 +13,13 @@
                 label="نام کیف پول خود را وارد نمایید*"
                 outlined
                 dense
+                color="#e2c12c"
               ></v-text-field>
 
               <v-select
                 v-model="form.crypto"
                 class="mx-4 d-block"
+                color="#e2c12c"
                 dense
                 label="لطفارمز ارز خود را وارد نمایید*"
                 outlined
@@ -29,6 +31,7 @@
                   class="mt-4 mr-5 d-inline-block"
                   dense
                   outlined
+                  color="#e2c12c"
                   label="آدرس خود را وارد نمایید*"
                   prepend-inner-icon="mdi-link"
                 ></v-text-field>
@@ -47,36 +50,61 @@
               value="success"
               hide-details
             ></v-switch>
-            <v-btn color="green" width="100" justify="center" @click="btnSave"
+            <v-btn color="green" class="mx-5" width="100" justify="center"
               >ذخیره</v-btn
             >
           </v-col>
         </div>
 
-        <v-toolbar
-          dense
-          flat
-          class="mt-4"
-          style="
-            border: 0;
-            border-top: 1px solid white;
-            border-bottom: 1px solid white;
-          "
-        >
-          <span>
-            <v-icon color="red" size="30" flat>mdi-text-search</v-icon>
-          </span>
+        <template slot:activator="{ on, attrs }">
+          <v-toolbar
+            dense
+            flat
+            dark
+            class="mt-4"
+            style="
+              border: 0;
+              border-top: 1px solid white;
+              border-bottom: 1px solid white;
+            "
+          >
+            <span>
+              <v-btn
+                flat
+                color="red"
+                size="30"
+                flat
+                @click="isHidden = !isHidden"
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon>mdi-text-search</v-icon></v-btn
+              >
+            </span>
 
-          <span class="mr-5">
-            <v-icon color="green" size="30" flat>mdi-format-list-checks</v-icon>
-          </span>
-        </v-toolbar>
+            <span class="mr-5">
+              <v-btn flat color="green" size="30"
+                ><v-icon>mdi-format-list-checks</v-icon></v-btn
+              >
+            </span>
+            <v-text-field
+              transition="fab-transition"
+              outlined
+              dense
+              color="#e2c12c"
+              style="margin-top: 24px; float: right; padding-right: 220px"
+              prepend-inner-icon="mdi-magnify"
+              placeholder="جستجو..."
+              v-if="!isHidden"
+            ></v-text-field>
+          </v-toolbar>
+        </template>
 
         <!-- Table!-->
         <v-col col="12" lg="12" md="8" xs="8">
-          <v-simple-table dark height="250">
+          <v-simple-table dark height="250" fixed-header>
             <template v-slot:default>
-              <thead dark flat dense>
+              <thead flat dense>
                 <tr>
                   <th
                     style="
@@ -129,14 +157,14 @@
                       border-bottom: 2px solid #e2c12c;
                       font-size: 16px;
                     "
-                    class="text-left"
+                    class="text-center"
                   >
                     عملیات
                   </th>
                 </tr>
               </thead>
-              <tbody v-if="List">
-                <tr v-for="item in Object.keys(List)" :key="item">
+              <tbody v-if="List" dark>
+                <tr v-for="(item, index) in Object.keys(List)" :key="item">
                   <td dense style="border: 0; border-bottom: 1px solid white">
                     {{ List[item].balance }}
                   </td>
@@ -144,15 +172,12 @@
                     {{ List[item].persian_name }}
                   </td>
                   <td dense style="border: 0; border-bottom: 1px solid white">
-                    <v-icon color="#E8690C" size="35">{{
-                      List[item].persian_name
-                    }}</v-icon>
+                    <cryptoicon :symbol="item" size="35" />
                   </td>
                   <td dense style="border: 0; border-bottom: 1px solid white">
                     {{ List[item].balance_irt }}
                   </td>
                   <td dense style="border: 0; border-bottom: 1px solid white">
-                    {{ List[item].wallet }}
                     <v-icon color="#CDBB1E">mdi-close-outline</v-icon>
                   </td>
                   <td dense style="border: 0; border-bottom: 1px solid white">
@@ -161,11 +186,64 @@
                       xs="6"
                       class="d-flex justify-center align-center"
                     >
-                      <v-btn
-                        color="#5D561C"
-                        class="d-inline-block float-left mr-3 flex-nowrap"
-                        >ویرایش</v-btn
-                      >
+                      <v-btn color="#C0392B" class="mr-4 float-left">حذف</v-btn>
+                    </v-col>
+                  </td>
+                </tr>
+              </tbody>
+
+              <tbody v-if="List" dark>
+                <tr v-for="(item, index) in Object.keys(List)" :key="item">
+                  <td dense style="border: 0; border-bottom: 1px solid white">
+                    {{ List[item].balance }}
+                  </td>
+                  <td dense style="border: 0; border-bottom: 1px solid white">
+                    {{ List[item].persian_name }}
+                  </td>
+                  <td dense style="border: 0; border-bottom: 1px solid white">
+                    <cryptoicon :symbol="item" size="35" />
+                  </td>
+                  <td dense style="border: 0; border-bottom: 1px solid white">
+                    {{ List[item].balance_irt }}
+                  </td>
+                  <td dense style="border: 0; border-bottom: 1px solid white">
+                    <v-icon color="#CDBB1E">mdi-close-outline</v-icon>
+                  </td>
+                  <td dense style="border: 0; border-bottom: 1px solid white">
+                    <v-col
+                      cols="12"
+                      xs="6"
+                      class="d-flex justify-center align-center"
+                    >
+                      <v-btn color="#C0392B" class="mr-4 float-left">حذف</v-btn>
+                    </v-col>
+                  </td>
+                </tr>
+              </tbody>
+
+              <tbody v-if="List" dark>
+                <tr v-for="(item, index) in Object.keys(List)" :key="item">
+                  <td dense style="border: 0; border-bottom: 1px solid white">
+                    {{ List[item].balance }}
+                  </td>
+                  <td dense style="border: 0; border-bottom: 1px solid white">
+                    {{ List[item].persian_name }}
+                  </td>
+                  <td dense style="border: 0; border-bottom: 1px solid white">
+                    <cryptoicon :symbol="item" size="35" />
+                  </td>
+                  <td dense style="border: 0; border-bottom: 1px solid white">
+                    {{ List[item].balance_irt }}
+                  </td>
+                  <td dense style="border: 0; border-bottom: 1px solid white">
+                    <v-icon color="#CDBB1E">mdi-close-outline</v-icon>
+                  </td>
+                  <td dense style="border: 0; border-bottom: 1px solid white">
+                    <v-col
+                      cols="12"
+                      xs="6"
+                      class="d-flex justify-center align-center"
+                    >
                       <v-btn color="#C0392B" class="mr-4 float-left">حذف</v-btn>
                     </v-col>
                   </td>
@@ -203,13 +281,15 @@ export default {
     List: null,
     page: 1,
     close: true,
+    Clicked: true,
+    isHidden: true,
   }),
+  methods: {},
 
   mounted() {
     const config = {
       headers: {
-        Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvY29yZS11LnNpZ21hZGV2b3BzLmlyXC9hcGlcL3VzZXJcL2xvZ2luIiwiaWF0IjoxNjE4Mjk0MTAwLCJleHAiOjE2MTgzMTU3MDAsIm5iZiI6MTYxODI5NDEwMCwianRpIjoiaThMOUpDZkYyV1pMWmpzcSIsInN1YiI6NDAyOCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.TKL3XYxY_6WActt8ke-SB01QQh2h2uKEyM4M-EhHk1o
-`,
+        Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvY29yZS11LnNpZ21hZGV2b3BzLmlyXC9hcGlcL3VzZXJcL2xvZ2luIiwiaWF0IjoxNjE4MzgyMjYxLCJleHAiOjE2MTg0MDM4NjEsIm5iZiI6MTYxODM4MjI2MSwianRpIjoiMkx1TEJoekJVSFZRYll1eCIsInN1YiI6NDE4NiwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.MXi8hsq6XFZaGfKQM9mpoujO4jASAcNhM2V-6So5x5g`,
       },
     };
     axios
