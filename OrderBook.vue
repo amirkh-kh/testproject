@@ -3,13 +3,13 @@
     <v-card cols="12" height="600" width="400">
       <v-simple-table dense>
         <template v-slot:default>
-          <thead>
+          <thead class="text-left">
             <tr>
               <th>قیمت</th>
               <th>حجم</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="text-left">
             <tr v-for="item in orderbook.buy" :key="item">
               <td>{{ item.price }}</td>
               <td>{{ item.amount }}</td>
@@ -20,13 +20,13 @@
 
       <v-simple-table dense>
         <template v-slot:default>
-          <thead>
+          <thead class="text-left">
             <tr>
               <th>قیمت</th>
               <th>حجم</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="text-left">
             <tr class="text-center" v-for="item in orderbook.sell" :key="item">
               <td>{{ item.price }}</td>
               <td>{{ item.amount }}</td>
