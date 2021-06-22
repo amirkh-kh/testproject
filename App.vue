@@ -1,13 +1,9 @@
 <template>
-  <div class="d-flex align-center View" style="height: 100vh">
+  <div class="d-flex align-center View">
     <v-row dir="rtl">
-      <v-col cols="2">
-        <v-card
-          height="770"
-          width="300"
-          style="background: #fff; border-radius: 5px 5px 0 0"
-        >
-          <div
+      <v-col cols="2" lg="2" sm="4">
+        <v-card width="300" style="background: #fff; border-radius: 5px 5px 0 0">
+          <!-- <div
             style="
               background: #4a6073;
               font: size 1.5rem;
@@ -15,29 +11,35 @@
               border-radius: 5px 5px 0 0;
             "
           >
-            <v-card-title class="Headtxt px-4">لیست رمز ارزها</v-card-title>
-          </div>
-          <v-btn class="col-12" text v-for="(name, id) in markets" :key="id">
-            <v-text class="text-right"
-              >{{ name.base_persian }}-{{ name.currency_persian }}</v-text
-            > </v-btn
-          ><br />
+            <v-card-title></v-card-title>
+          </div> -->
+          <v-list flat>
+            <v-subheader class="Headtxt">لیست رمز ارزها</v-subheader>
+            <v-list-item-group v-model="selectedItem" color="primary">
+              <v-list-item v-for="(name, id) in markets" :key="id">
+                <v-list-item-icon>
+                  <cryptoicon :symbol="name.base_sign"></cryptoicon>
+                  <cryptoicon :symbol="name.currency_sign"></cryptoicon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title
+                    ><v-text class="mx-3">
+                      {{ name.base_persian }}-{{ name.currency_persian }}
+                    </v-text></v-list-item-title
+                  >
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
         </v-card>
       </v-col>
+
+      <!-- orderbook -->
       <v-col cols="5">
-        <v-card
-          cols="12"
-          height="600"
-          width="400"
-          class="rounded-lg"
-          justify="center"
-        >
+        <v-card cols="12" width="400">
           <v-simple-table dense>
             <template v-slot:default>
-              <thead
-                class="txt"
-                style="background: #02c076; border-radius: 5px 5px 0 0"
-              >
+              <thead class="txt" style="background: #02c076; border-radius: 5px 5px 0 0">
                 <tr>
                   <th>قیمت</th>
                   <th>حجم</th>
@@ -54,10 +56,7 @@
 
           <v-simple-table dense>
             <template v-slot:default>
-              <thead
-                style="background: #ff5252; border-radius: 5px 5px 0 0"
-                class="txt"
-              >
+              <thead style="background: #ff5252; border-radius: 5px 5px 0 0" class="txt">
                 <tr>
                   <th>قیمت</th>
                   <th>حجم</th>
@@ -87,6 +86,7 @@ export default {
     socket: null,
     orderbook: null,
     markets: null,
+    selectedItem: 1,
   }),
   methods: {
     startWebsocket() {
@@ -108,6 +108,7 @@ export default {
           console.log(err);
         });
     },
+
     putComma(number) {
       const parts = number.toString().split(".");
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -131,11 +132,13 @@ export default {
   text-align: center;
 }
 .View {
-  display: flex;
   align-items: center;
   background: rgb(0 0 0 / 20%);
 }
 .Headtxt {
+  margin: 0;
   color: #fff;
+  background: #4a6073;
+  font-size: 20px;
 }
 </style>
